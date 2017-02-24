@@ -17,7 +17,7 @@ type lookupSRV func(service, proto, name string) (cname string, addrs []*net.SRV
 
 func lookupWihLookupSRV(service string, lookup lookupSRV) (*string, error) {
 	if !strings.HasSuffix(service, ".consul") {
-		return nil, fmt.Errorf("%q is not a consul URL. Needs to end with .consul", service)
+		return nil, nil
 	}
 
 	_, srvs, err := lookup("", "", service)

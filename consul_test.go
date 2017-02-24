@@ -39,7 +39,7 @@ func TestLookup(t *testing.T) {
 func TestLookup_InvalidName(t *testing.T) {
 	service := "example.com"
 	r, err := Lookup(service)
-	assertEqual(t, `"example.com" is not a consul URL. Needs to end with .consul`, err.Error())
+	assertNil(t, err, "Error should have been nil")
 	assertNil(t, r, "Result should have been nil")
 }
 

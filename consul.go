@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"net/url"
 	"strings"
 )
 
@@ -20,7 +21,9 @@ func lookupWihLookupSRV(service string, lookup lookupSRV) (*string, error) {
 		return nil, nil
 	}
 
-	_, srvs, err := lookup("", "", service)
+	u, _ := url.Parse(service)
+
+	_, srvs, err := lookup("", "", u.Host)
 
 	if err != nil {
 		return nil, fmt.Errorf("Error performing SRV DNS Lookup for %s - %s", service, err.Error())
@@ -32,6 +35,10 @@ func lookupWihLookupSRV(service string, lookup lookupSRV) (*string, error) {
 
 	srv := srvs[rand.Intn(len(srvs))]
 	target := fmt.Sprintf("%s:%d", strings.TrimSuffix(srv.Target, "."), srv.Port)
+
+	if u.Scheme != "" {
+		target = fmt.Sprintf("%s://%s", u.Scheme, target)
+	}
 
 	return &target, nil
 
